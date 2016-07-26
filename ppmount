@@ -1,0 +1,4 @@
+#!/bin/bash
+tty=$(tty)
+pass=$(printf 'SETPROMPT Passphrase for pmount:\nGETPIN\n' | pinentry "--ttyname=$tty" | grep '^D ' | cut -c 3-)
+/usr/bin/pmount -p <(builtin printf '%s' "$pass") "$@"
