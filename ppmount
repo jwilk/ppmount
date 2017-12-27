@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# Copyright © 2016-2017 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
 tty=$(tty)
 pass=$(printf 'SETPROMPT Passphrase for pmount:\nGETPIN\n' | pinentry "--ttyname=$tty" | grep '^D ' | cut -c 3-)
 /usr/bin/pmount -p <(builtin printf '%s' "$pass") "$@"
