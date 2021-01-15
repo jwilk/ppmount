@@ -4,6 +4,5 @@
 # SPDX-License-Identifier: MIT
 
 set -e -u
-tty=$(tty)
-pass=$(printf 'SETPROMPT Passphrase for pmount:\nGETPIN\n' | pinentry "--ttyname=$tty" | grep '^D ' | cut -c 3-)
+pass=$(SYSTEMD_COLORS=y systemd-ask-password)
 pmount -p <(builtin printf '%s' "$pass") "$@"
