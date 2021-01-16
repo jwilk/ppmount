@@ -4,5 +4,5 @@
 # SPDX-License-Identifier: MIT
 
 set -e -u
-pass=$(SYSTEMD_COLORS=y systemd-ask-password)
+pass=$(SYSTEMD_COLORS=y systemd-ask-password 'Passphrase for pmount:')
 pmount -p <(builtin printf '%s' "$pass") "$@"
