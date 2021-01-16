@@ -4,5 +4,15 @@
 # SPDX-License-Identifier: MIT
 
 set -e -u
-pass=$(SYSTEMD_COLORS=y systemd-ask-password 'Passphrase for pmount:')
-pmount -p <(builtin printf '%s' "$pass") "$@"
+tmpdir=$(mktemp -d -t ppmount.XXXXXX)
+trap 'rm -rf "$tmpdir"' EXIT
+mkfifo "$tmpdir/fifo"
+(
+    exec < /dev/tty > "$tmpdir/fifo"
+    pass=$(SYSTEMD_COLORS=y systemd-ask-password 'Passphrase for pmount:')
+    printf '%s' "$pass"
+) &
+trap 'kill %1; wait' EXIT
+pmount -p "$tmpdir/fifo" "$@"
+
+# vim:ts=4 sts=4 sw=4 et
